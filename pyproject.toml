@@ -10,3 +10,11 @@ dependencies = [
     "langgraph>=1.0.10",
     "python-dotenv>=1.2.2",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.4",
+]
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"

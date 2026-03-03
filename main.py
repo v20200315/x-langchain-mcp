@@ -3,6 +3,7 @@ import os
 
 from dotenv import load_dotenv
 from langchain.agents import create_agent
+from langchain_core.messages import HumanMessage
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_openai import ChatOpenAI
 from mcp import ClientSession, StdioServerParameters
@@ -21,7 +22,16 @@ stdio_server_params = StdioServerParameters(
 
 
 async def main():
-    print('Hello from x-langchain-mcp!')
+    async with stdio_client(stdio_server_params) as (reader, writer):
+        async with ClientSession(read_stream=reader, write_stream=writer) as session:
+            await session.initialize()
+            print('Session initialized')
+            tools = await load_mcp_tools(session)
+            agent = create_agent(llm, tools)
+            result = await agent.ainvoke(
+                {'messages': HumanMessage(content='What is 54 + 2 * 3?')}
+            )
+            print(result['messages'][-1].content)
 
 
 if __name__ == '__main__':

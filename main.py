@@ -1,6 +1,15 @@
-def main():
+import asyncio
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+print(os.getenv('OPENAI_API_KEY'))
+
+
+async def main():
     print('Hello from x-langchain-mcp!')
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
